@@ -1,0 +1,1318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bharat Age | Research by Rupa Bhaty</title>
+<meta name="theme-color" content="#141b41">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✦</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#ffffff;
+  --ink:#211a14;
+  --muted:#6f6459;
+  --line:#e9e1d6;
+  --wash:#faf6f0;
+  --accent:#b8401f;
+  --accent-soft:#fbeee8;
+  --night:#141b41;
+  --night-2:#212a5e;
+  --gold:#e8a13c;
+  --astro:#4451b8; --astro-bg:#eef0fb;
+  --arch:#8a6512;  --arch-bg:#f7f1dd;
+  --paleo:#75584a; --paleo-bg:#f2ece6;
+  --geo:#2e7d4f;   --geo-bg:#e9f4ed;
+  --gen:#9c2f80;   --gen-bg:#f9ecf5;
+  --text:#b8401f;  --text-bg:#fbeee8;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --display:"Fraunces",Georgia,serif;
+
+  /* one gutter drives every horizontal edge on the page */
+  --gutter:16px;
+  --gap-inner:8px;   /* row1↔row2, the two row-1 controls, and the filter chips */
+  --ctl-h:38px;
+  /* timeline rail: 2px wide at x=6 inside .era, so its centre line is x=7 */
+  --rail-x:6px;
+  --rail-c:7px;
+  --era-pad:24px;
+}
+@media (min-width:480px){:root{--gutter:24px}}
+/* pseudo-elements need naming explicitly — `*` does not match them, and any
+   bordered ::before would otherwise fall back to content-box and sit off-centre */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{
+  background:var(--wash);
+  color:var(--ink);
+  font-family:var(--serif);
+  font-size:17px;
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+.shell{max-width:600px;margin:0 auto;background:var(--paper);min-height:100vh;box-shadow:0 0 40px rgba(60,40,20,.08)}
+
+/* ---------- progress bar ---------- */
+#progress{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--accent),var(--gold));z-index:60}
+
+/* ---------- hero ---------- */
+.hero{
+  position:relative;
+  background:radial-gradient(120% 90% at 70% 10%,var(--night-2),var(--night) 70%);
+  color:#f5f1e8;
+  padding:56px var(--gutter) 44px;
+  overflow:hidden;
+}
+.hero .stars{position:absolute;inset:0;pointer-events:none}
+.hero .star{position:absolute;border-radius:50%;background:#fff}
+@media (prefers-reduced-motion:no-preference){
+  .hero .star.tw{animation:twinkle 3.4s ease-in-out infinite}
+  @keyframes twinkle{0%,100%{opacity:.25}50%{opacity:.95}}
+}
+.hero svg.ecliptic{position:absolute;left:0;right:0;bottom:-6px;width:100%;height:120px;pointer-events:none;opacity:.9}
+.hero .content{position:relative;z-index:2}
+.hero .eyebrow{
+  font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--gold);margin-bottom:14px;
+}
+.hero h1{
+  font-family:var(--display);font-weight:600;font-size:44px;line-height:1.04;
+  text-wrap:balance;margin-bottom:16px;
+}
+.hero .sub{font-size:16.5px;line-height:1.55;color:#cfd2e8;max-width:44ch}
+.hero .sub strong{color:#fff;font-weight:600}
+.hero .anchor-note{
+  margin-top:22px;display:flex;align-items:flex-start;gap:8px;
+  font-family:var(--sans);font-size:12px;line-height:18px;color:#a8adcf;
+  max-width:40ch;
+}
+.hero .anchor-note::before{
+  content:"✦";color:var(--gold);font-size:13px;line-height:18px;flex:0 0 auto;
+}
+
+/* ---------- toolbar ---------- */
+/* every edge of the toolbar — top, right, bottom, left — and the gap
+   between its two rows are all one and the same --gutter value */
+.toolbar{
+  position:sticky;top:0;z-index:50;background:var(--paper);
+  border-bottom:1px solid var(--line);
+  padding:var(--gutter);
+  /* the two rows read as one unit, so they sit at the inner gap, not the gutter */
+  display:flex;flex-direction:column;gap:var(--gap-inner);
+}
+.tb-row{display:flex;gap:var(--gap-inner);align-items:stretch}
+#chapterBtn{
+  flex:1;min-width:0;height:var(--ctl-h);
+  display:flex;align-items:center;gap:8px;
+  border:1px solid var(--line);background:var(--wash);border-radius:10px;
+  padding:0 10px 0 8px;font-family:var(--sans);font-size:13px;font-weight:600;
+  color:var(--ink);cursor:pointer;text-align:left;
+}
+#chapterBtn .num{
+  flex:0 0 auto;min-width:26px;height:22px;
+  display:inline-flex;align-items:center;justify-content:center;
+  font-family:var(--display);font-weight:700;font-size:12px;line-height:1;
+  color:#fff;background:var(--accent);border-radius:6px;padding:0 5px;
+}
+#chapterBtn.theme .num{background:var(--gen)}
+#chapterBtn .lbl{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#chapterBtn .car{
+  margin-left:auto;flex:0 0 auto;color:var(--muted);
+  display:flex;align-items:center;transition:transform .25s;
+}
+/* chevron points down when collapsed; rotating flips it up while the sheet is open */
+#chapterBtn[aria-expanded="true"] .car{transform:rotate(180deg)}
+.searchwrap{position:relative;flex:1.15;min-width:0;display:flex}
+.searchwrap .ic{
+  position:absolute;left:12px;top:50%;transform:translateY(-50%);
+  color:var(--muted);pointer-events:none;
+}
+#search{
+  width:100%;min-width:0;height:var(--ctl-h);
+  border:1px solid var(--line);border-radius:10px;
+  padding:0 32px 0 34px;font-family:var(--sans);font-size:14px;color:var(--ink);
+  background:var(--paper);outline:none;
+  text-overflow:ellipsis;              /* truncates typed text … */
+}
+#search::placeholder{text-overflow:ellipsis;overflow:hidden;white-space:nowrap}
+#search::-webkit-input-placeholder{text-overflow:ellipsis}
+/* suppress the WebKit clear button — the styled one below is the only one */
+#search::-webkit-search-cancel-button,
+#search::-webkit-search-decoration{-webkit-appearance:none;appearance:none;display:none}
+#search:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+#clearBtn{
+  position:absolute;right:8px;top:50%;transform:translateY(-50%);
+  border:0;background:var(--line);color:var(--muted);border-radius:50%;
+  width:19px;height:19px;padding:0;cursor:pointer;
+  display:none;align-items:center;justify-content:center;
+}
+#clearBtn.show{display:flex}
+#clearBtn:hover{background:#ddd2c2;color:var(--ink)}
+.filters{
+  display:flex;gap:var(--gap-inner);overflow-x:auto;
+  scrollbar-width:none;-webkit-overflow-scrolling:touch;
+}
+.filters::-webkit-scrollbar{display:none}
+.fchip{
+  flex:0 0 auto;height:30px;padding:0 12px;
+  border:1px solid var(--line);background:var(--paper);border-radius:999px;
+  font-family:var(--sans);font-size:12px;font-weight:600;color:var(--muted);
+  cursor:pointer;display:inline-flex;align-items:center;gap:6px;
+  transition:background .15s,color .15s,border-color .15s;
+}
+.fchip::before{content:"";flex:0 0 auto;width:8px;height:8px;border-radius:50%;background:var(--c)}
+.fchip.on{color:#fff;background:var(--c);border-color:var(--c)}
+.fchip.on::before{background:#fff}
+.fchip:focus-visible{outline:2px solid var(--accent);outline-offset:-3px}
+#resultBar{
+  display:none;font-family:var(--sans);font-size:12.5px;color:var(--muted);
+  padding:0;
+}
+#resultBar b{color:var(--accent)}
+
+/* ---------- timeline ---------- */
+main{padding:8px var(--gutter) 40px}
+.era{position:relative;padding:26px 0 8px var(--era-pad);scroll-margin-top:130px}
+/* rail: 2px wide starting at --rail-x, so its centre sits on --rail-c */
+.era::before{
+  content:"";position:absolute;left:var(--rail-x);top:0;bottom:0;width:2px;
+  background:var(--line);
+}
+.era:last-of-type::before{
+  background:linear-gradient(var(--line),var(--line) calc(100% - 80px),transparent);
+}
+.era-head{position:relative;margin-bottom:18px}
+/* 12px dot: left edge = rail centre − 6 (in .era-head's coordinate space) */
+.era-head::before{
+  content:"";position:absolute;
+  left:calc(var(--rail-c) - var(--era-pad) - 6px);
+  top:3px;width:12px;height:12px;
+  border-radius:50%;background:var(--accent);
+  box-shadow:0 0 0 4px var(--accent-soft);
+}
+/* 18px line box → its centre is 9px down, matching the dot centre at 3+6 */
+.era-head .span{
+  display:block;font-family:var(--sans);font-size:11px;font-weight:700;
+  letter-spacing:.14em;line-height:18px;text-transform:uppercase;color:var(--accent);
+}
+.era-head h2{
+  font-family:var(--display);font-weight:600;font-size:27px;line-height:1.15;
+  text-wrap:balance;margin-top:5px;
+}
+.era-head .num{
+  font-family:var(--display);font-style:italic;font-weight:500;
+  color:var(--muted);font-size:15px;margin-right:6px;
+}
+.entry{position:relative;padding:0 0 26px;scroll-margin-top:130px}
+/* 10px border-box dot: left edge = rail centre − 5; top 5 → centre 10,
+   the middle of the 20px meta row (same centre a badge resolves to) */
+.entry::before{
+  content:"";position:absolute;
+  left:calc(var(--rail-c) - var(--era-pad) - 5px);
+  top:5px;width:10px;height:10px;
+  border-radius:50%;background:var(--paper);border:2px solid #cfc4b4;
+}
+.entry.hide{display:none}
+.era.hide{display:none}
+/* fixed 20px meta row so the dot lands identically whether the row holds
+   a date, a date + badges, or badges only */
+.entry .meta{
+  display:flex;flex-wrap:wrap;align-items:center;gap:6px;
+  min-height:20px;margin-bottom:5px;
+}
+/* a badge is a box, so centring it centres what you see; text is not — its line
+   box carries half-leading and descender space, so the ink rides high of centre.
+   text-box trims the box to the cap-height/baseline band, which makes the date
+   text and the badges resolve to one shared optical centre. Browsers without it
+   fall back to the line box, already within a quarter pixel. */
+.entry .when{
+  font-family:var(--display);font-weight:700;font-size:15px;line-height:20px;
+  color:var(--accent);letter-spacing:.01em;
+  text-box:trim-both cap alphabetic;
+}
+.entry .tags{display:inline-flex;align-items:center;gap:4px}
+.tg{
+  display:inline-flex;align-items:center;height:17px;padding:0 7px;
+  font-family:var(--sans);font-style:normal;font-size:9.5px;font-weight:700;
+  line-height:1;letter-spacing:.09em;border-radius:5px;
+}
+.tg.astro{color:var(--astro);background:var(--astro-bg)}
+.tg.arch{color:var(--arch);background:var(--arch-bg)}
+.tg.paleo{color:var(--paleo);background:var(--paleo-bg)}
+.tg.geo{color:var(--geo);background:var(--geo-bg)}
+.tg.gen{color:var(--gen);background:var(--gen-bg)}
+.tg.text{color:var(--text);background:var(--text-bg)}
+.entry h3{
+  font-family:var(--display);font-weight:600;font-size:19.5px;line-height:1.25;
+  text-wrap:balance;margin-bottom:8px;
+}
+.entry p{margin-bottom:10px;color:#3a322a}
+.entry p:last-child{margin-bottom:0}
+.entry strong{color:var(--ink);font-weight:600}
+.entry.key{
+  background:linear-gradient(180deg,#fdf7ef,#fdf3ea);
+  border:1px solid #f0dcc8;border-radius:14px;
+  padding:18px 18px 16px;margin-bottom:26px;
+}
+/* The card is the positioned ancestor and carries a 1px border, so left/top here
+   resolve against its padding box — 1px in from the card's edge. Both axes cancel
+   that out: x = rail centre − half dot − border; y = 18px padding + half the 16px
+   label line = 27 from the card edge, less the 1px border and half the dot. */
+.entry.key::before{
+  left:calc(var(--rail-c) - var(--era-pad) - 5px - 1px);
+  top:21px;border-color:var(--gold);background:var(--gold);
+}
+.entry.key .keylabel{
+  font-family:var(--sans);font-size:10.5px;font-weight:700;letter-spacing:.16em;
+  line-height:16px;text-transform:uppercase;color:#a4671b;margin-bottom:7px;
+}
+.tablewrap{overflow-x:auto;margin:12px 0 10px;border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:14.5px;min-width:340px}
+th{
+  font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--muted);text-align:left;
+  padding:9px 12px;background:var(--wash);border-bottom:1px solid var(--line);
+}
+td{padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top;color:#3a322a}
+tr:last-child td{border-bottom:0}
+mark{background:#ffe9a8;color:inherit;border-radius:2px;padding:0 1px}
+
+/* ---------- themes ---------- */
+.themes-head{
+  position:relative;padding:34px 0 6px var(--era-pad);scroll-margin-top:130px;
+}
+.themes-head .span{
+  font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--gen);
+}
+.themes-head h2{font-family:var(--display);font-weight:600;font-size:27px;margin-top:4px}
+.themes-head p{color:var(--muted);font-size:15px;margin-top:6px}
+.era.theme .era-head::before{background:var(--gen);box-shadow:0 0 0 4px var(--gen-bg)}
+.era.theme .era-head .span{color:var(--gen)}
+
+/* ---------- no results ---------- */
+#noResults{
+  display:none;text-align:center;padding:60px 20px;color:var(--muted);
+  font-family:var(--sans);font-size:14.5px;
+}
+#noResults .big{font-size:34px;margin-bottom:10px}
+
+/* ---------- footer ---------- */
+footer{
+  background:var(--night);color:#a8adcf;padding:36px var(--gutter) 76px;
+  font-family:var(--sans);font-size:13px;line-height:1.7;
+}
+footer .fstar{color:var(--gold);font-size:16px;margin-bottom:12px}
+footer strong{color:#f5f1e8;font-weight:600}
+footer p+p{margin-top:10px}
+
+/* ---------- TOC sheet ---------- */
+#tocOverlay{
+  position:fixed;inset:0;background:rgba(20,20,30,.45);z-index:80;
+  opacity:0;pointer-events:none;transition:opacity .2s;
+}
+#tocOverlay.open{opacity:1;pointer-events:auto}
+#toc{
+  position:fixed;left:50%;bottom:0;transform:translate(-50%,102%);
+  width:100%;max-width:600px;max-height:78vh;overflow-y:auto;
+  background:var(--paper);border-radius:18px 18px 0 0;z-index:90;
+  transition:transform .28s cubic-bezier(.3,1,.4,1);
+  box-shadow:0 -8px 40px rgba(0,0,0,.2);
+  padding:10px var(--gutter) 28px;
+}
+#toc.open{transform:translate(-50%,0)}
+#toc .grip{width:38px;height:4px;border-radius:2px;background:var(--line);margin:6px auto 14px}
+#toc .toc-title{
+  font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--muted);margin:10px 0 6px;
+}
+/* negative inline margin lets the hover fill bleed while the text keeps the gutter */
+#toc a{
+  display:flex;align-items:baseline;gap:10px;text-decoration:none;color:var(--ink);
+  padding:10px 8px;margin:0 -8px;border-radius:10px;
+  font-family:var(--sans);font-size:14.5px;font-weight:500;
+}
+#toc a:active,#toc a:hover{background:var(--wash)}
+#toc a .n{
+  flex-shrink:0;font-family:var(--display);font-style:italic;font-weight:600;
+  color:var(--accent);font-size:13px;width:26px;
+}
+#toc a .rng{margin-left:auto;flex-shrink:0;font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+#toc a.cur{background:var(--accent-soft)}
+#toc a.th .n{color:var(--gen)}
+
+/* ---------- back to top ---------- */
+#topBtn{
+  position:fixed;right:calc(50% - 300px + var(--gutter));bottom:18px;z-index:40;
+  width:42px;height:42px;border-radius:50%;border:0;padding:0;cursor:pointer;
+  /* accent, not --night: the footer is --night and the button vanished on it */
+  background:var(--accent);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 14px rgba(80,30,10,.34);
+  opacity:0;pointer-events:none;transition:opacity .2s;
+}
+@media (max-width:648px){#topBtn{right:var(--gutter)}}
+#topBtn.show{opacity:1;pointer-events:auto}
+
+/* ---------- focus ---------- */
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+#search:focus-visible{outline:none}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<div class="shell">
+
+<!-- ================= HERO ================= -->
+<header class="hero">
+  <div class="stars" id="starfield"></div>
+  <svg class="ecliptic" viewBox="0 0 600 120" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M -10 34 Q 300 6 610 34" fill="none" stroke="#8a90c0" stroke-width="1" stroke-dasharray="3 6" opacity=".7"/>
+    <g transform="translate(210,66)">
+      <circle r="2.6" fill="#fff"/>
+      <path d="M0-9 L1.6-1.6 9 0 1.6 1.6 0 9 -1.6 1.6 -9 0 -1.6-1.6 Z" fill="#fff" opacity=".85"/>
+    </g>
+    <path d="M 206 44 Q 208 54 210 62" fill="none" stroke="#e8a13c" stroke-width="1" stroke-dasharray="2 3" opacity=".8"/>
+  </svg>
+  <div class="content">
+    <div class="eyebrow">Research by Rupa Bhaty</div>
+    <h1>The True Age of Bharat</h1>
+    <p class="sub">Archaeology, paleoanthropology, genetics and, above all, <strong>astronomy read out of the Vedic texts</strong> — a memory reaching back 220,000 years, and further.</p>
+    <div class="anchor-note">Sirius left the ecliptic once, and never returned — the anchor of the chronology</div>
+  </div>
+</header>
+
+<!-- ================= TOOLBAR ================= -->
+<nav class="toolbar" aria-label="Timeline navigation">
+  <div class="tb-row">
+    <button id="chapterBtn" aria-haspopup="dialog" aria-controls="toc" aria-expanded="false">
+      <span class="num" id="curNum">I</span>
+      <span class="lbl" id="curLbl">Deep Prehistory</span>
+      <span class="car" aria-hidden="true"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
+    </button>
+    <div class="searchwrap">
+      <svg class="ic" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg>
+      <input id="search" type="text" role="searchbox" inputmode="search" enterkeyhint="search" placeholder="Search the timeline…" autocomplete="off" aria-label="Search the timeline">
+      <button id="clearBtn" aria-label="Clear search"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
+    </div>
+  </div>
+  <div class="filters" role="group" aria-label="Filter by evidence type">
+    <button class="fchip" data-tag="astro" style="--c:var(--astro)">Astronomy</button>
+    <button class="fchip" data-tag="text" style="--c:var(--text)">Textual</button>
+    <button class="fchip" data-tag="arch" style="--c:var(--arch)">Archaeology</button>
+    <button class="fchip" data-tag="geo" style="--c:var(--geo)">Geology</button>
+    <button class="fchip" data-tag="gen" style="--c:var(--gen)">Genetics</button>
+    <button class="fchip" data-tag="paleo" style="--c:var(--paleo)">Paleo</button>
+  </div>
+  <div id="resultBar"></div>
+</nav>
+
+<main>
+
+<!-- ================= ERA I ================= -->
+<section class="era" id="era-1" data-num="I" data-name="Deep Prehistory">
+  <div class="era-head">
+    <div class="span">1.5 million years ago — 300,000 BCE</div>
+    <h2><span class="num">I.</span>Deep Prehistory</h2>
+  </div>
+
+  <article class="entry" data-tags="arch">
+    <div class="meta"><span class="when">1.5 million years ago</span><span class="tags"><i class="tg arch">ARCH</i></span></div>
+    <h3>Attirampakkam</h3>
+    <p>Acheulian hand-axes and cleavers in Tamil Nadu. The oldest civilisational memory in physical form. Occupation at the site runs unbroken for 1.4 million years, to 120,000 BCE.</p>
+  </article>
+
+  <article class="entry" data-tags="arch">
+    <div class="meta"><span class="when">1.5 million – 800,000 years ago</span><span class="tags"><i class="tg arch">ARCH</i></span></div>
+    <h3>A uniform global tool horizon</h3>
+    <p>Technology at this depth is globally shared, as mobile telephony is today — not one origin point but one technological grammar across pockets. Northern latitudes lay under ice; populations concentrated in refugia. Cranial capacity and frontal lobe develop alongside the toolkit.</p>
+  </article>
+
+  <article class="entry" data-tags="paleo">
+    <div class="meta"><span class="when">800,000 BCE</span><span class="tags"><i class="tg paleo">PALEO</i></span></div>
+    <h3>Modern form, and language</h3>
+    <p>Bhaty places <em>Homo sapiens</em> in good form here, with the gene enabling language arriving in this window. From this point the sky begins to be remembered.</p>
+  </article>
+
+  <article class="entry" data-tags="text arch">
+    <div class="meta"><span class="tags"><i class="tg text">TEXT</i><i class="tg arch">ARCH</i></span></div>
+    <h3>Tool vocabulary as a dating instrument</h3>
+    <p><em>Svadhiti</em> — hand-axe — appears in Rigveda and nowhere afterwards, not even in Ramayana, where combatants fight with uprooted trees and boulders. The hafted axe succeeds it, and Shatapatha Brahmana carries mantras specifying that the handle must not part from the scraper. A ritual investment that makes no sense for a trivial technology. A word that dies out of the tradition dates the layer that holds it.</p>
+  </article>
+
+  <article class="entry" data-tags="text">
+    <div class="meta"><span class="tags"><i class="tg text">TEXT</i></span></div>
+    <h3>Language and PIE</h3>
+    <p>Whether one says Proto-Indo-European or Proto-Indo-Iranian, the <em>Indo</em> is unavoidable. Drop India and the reconstruction collapses — the words and their descriptions already exist in Rigveda as living speech.</p>
+  </article>
+
+  <article class="entry" data-tags="text">
+    <div class="meta"><span class="when">380,000 BCE</span><span class="tags"><i class="tg text">TEXT</i></span></div>
+    <h3>Precedent</h3>
+    <p>Mesopotamia's own king-lists claim a depth of this order, and this is not treated as scandalous. Indian claims of comparable depth are dismissed on principle, not on evidence.</p>
+  </article>
+</section>
+
+<!-- ================= ERA II ================= -->
+<section class="era" id="era-2" data-num="II" data-name="The Narmada Horizon">
+  <div class="era-head">
+    <div class="span">300,000 – 250,000 BCE</div>
+    <h2><span class="num">II.</span>The Narmada Horizon</h2>
+  </div>
+
+  <article class="entry" data-tags="paleo">
+    <div class="meta"><span class="tags"><i class="tg paleo">PALEO</i></span></div>
+    <h3>Narmada (Hathnora) cranium</h3>
+    <p>Anne Dambricourt Malassé assigns it a cranial capacity and morphology matching <em>Homo sapiens</em>. Others place it borderline between <em>erectus</em> and <em>sapiens</em>; she reads it as <em>sapiens</em> outright. The paper was discarded because an Indian origin was unpalatable.</p>
+  </article>
+
+  <article class="entry" data-tags="paleo">
+    <div class="meta"><span class="tags"><i class="tg paleo">PALEO</i></span></div>
+    <h3>Kabwe, for comparison</h3>
+    <p>Same bracket, 250,000–300,000 BCE, in Africa. The frontal lobe development present at Narmada is absent at Kabwe.</p>
+  </article>
+
+  <article class="entry" data-tags="paleo text">
+    <div class="meta"><span class="tags"><i class="tg paleo">PALEO</i><i class="tg text">TEXT</i></span></div>
+    <h3>What follows from the pair</h3>
+    <p>India was neurologically equipped to compose and orally transmit a text of Rigvedic complexity. The depth of Indian civilisational history exceeds that of comparators for which physical evidence exists. And no genetic equation for the peopling of the world balances without India.</p>
+  </article>
+
+  <article class="entry" data-tags="gen">
+    <div class="meta"><span class="tags"><i class="tg gen">GEN</i></span></div>
+    <h3>Multiple origins</h3>
+    <p>A single Out-of-Africa exit is insufficient. Skulls of this horizon appear everywhere, including China. The textbook 75,000 BCE exit is under pressure.</p>
+  </article>
+</section>
+
+<!-- ================= ERA III ================= -->
+<section class="era" id="era-3" data-num="III" data-name="The Sirius Datum">
+  <div class="era-head">
+    <div class="span">220,000 BCE</div>
+    <h2><span class="num">III.</span>The Sirius Datum</h2>
+  </div>
+
+  <article class="entry key" data-tags="astro text">
+    <div class="keylabel">✦ The load-bearing claim of the chronology</div>
+    <div class="meta"><span class="when">220,000 BCE</span><span class="tags"><i class="tg astro">ASTRO</i><i class="tg text">TEXT</i></span></div>
+    <h3>Sirius leaves the ecliptic</h3>
+    <p>Sirius sat <strong>on the ecliptic</strong> — the shared path of sun and moon, the band the nakshatra system divides. Carrying exceptionally large proper motion, it then began a steady, one-directional drift <strong>south</strong>, and has never returned. Rigveda records the star at that position, and records it leaving.</p>
+    <p>The textual carrier is the <strong>Shunah-Sirau</strong>: the two sons of <strong>Sarama</strong>, Indra's dog. One dog, two heads, four eyes. These are <strong>Sirius and Procyon</strong>. Greek memory retains the same figure, now split into two separate dogs — because the heads have moved that far apart. Sirius survives there as the Dog Star.</p>
+    <p>The event is unrepeatable. Sirius crossed the ecliptic once and only once, and cannot have done so before or after. Computing the star's full space motion backwards confirms the crossing at roughly 200,000 BCE, with Procyon abandoning the ecliptic considerably later, near 47,000 BCE. The myth therefore holds two epochs, not one.</p>
+  </article>
+
+  <article class="entry" data-tags="astro">
+    <div class="meta"><span class="tags"><i class="tg astro">ASTRO</i></span></div>
+    <h3>Sirius as an instrument</h3>
+    <p>The brightest star in the sky, observable around the summer solstice and cleanly at the autumnal equinox with the rising of Agastya. Sirius is <strong>Rudra-bahu</strong>; Agastya (Canopus), some ten degrees below in reference, gives <strong>Indra-bahu</strong>. The pair form a locating device — how to find which one is Indra.</p>
+  </article>
+</section>
+
+<!-- ================= ERA IV ================= -->
+<section class="era" id="era-4" data-num="IV" data-name="Satisar &amp; Saraswati">
+  <div class="era-head">
+    <div class="span">200,000 – 166,000 BCE</div>
+    <h2><span class="num">IV.</span>Satisar and Saraswati</h2>
+  </div>
+
+  <article class="entry" data-tags="geo text">
+    <div class="meta"><span class="when">200,000 BCE</span><span class="tags"><i class="tg geo">GEO</i><i class="tg text">TEXT</i></span></div>
+    <h3>Satisar and the making of Kashmir</h3>
+    <p>The Pir Panjal carried half a kilometre of snow; ice stood where grass grows today. Satisar was a lake of many square kilometres. <strong>Kashyapa drained it</strong>, and the exposed land became Kashmir — hence the name.</p>
+    <p>Bhaty, an architect by training, notes that draining a lake at that scale to make a valley remains difficult for modern engineers. We cannot build the pyramids today. Consider how long the plinth work alone took for the Burj Khalifa. The scepticism directed at ancient hydraulic works is not proportionate to what modern practice actually achieves.</p>
+  </article>
+
+  <article class="entry" data-tags="geo">
+    <div class="meta"><span class="when">172,000 BCE</span><span class="tags"><i class="tg geo">GEO</i></span></div>
+    <h3>Saraswati flowing</h3>
+    <p>Dated evidence of a major river in the Thar, from OSL dating of fluvial sediments near Bikaner — the oldest securely dated river activity in the desert, over 200 km from any modern watercourse. At maximum the river ran <strong>20 km wide</strong>; ISRO-mapped palaeochannels from Barmer to Tanot Mata are 20 km wide at many points, with tributaries feeding in. A river of that scale is sufficient cause for the mantras addressed to her.</p>
+    <p>For Bhaty this is a floor, not a ceiling. Wherever the older water is found, an older Saraswati will be found with it. She expects the Satisar and Sirius evidence to pull the river back toward 200,000 BCE.</p>
+  </article>
+
+  <article class="entry" data-tags="text">
+    <div class="meta"><span class="tags"><i class="tg text">TEXT</i></span></div>
+    <h3>Saraswati as Vach</h3>
+    <p>She is Vagdevi, devata of speech and of mantra itself. The antiquity of the river and the antiquity of the language are one claim, not two.</p>
+  </article>
+
+  <article class="entry" data-tags="arch">
+    <div class="meta"><span class="when">166,000 BCE</span><span class="tags"><i class="tg arch">ARCH</i></span></div>
+    <h3>Laterite infant fossil, Tamil Nadu</h3>
+    <p>Continuity. The Narmada cranium is not an isolated find with a void behind it.</p>
+  </article>
+
+  <article class="entry" data-tags="text">
+    <div class="meta"><span class="tags"><i class="tg text">TEXT</i></span></div>
+    <h3>Why India yields so few bones</h3>
+    <p>Rigveda attests both burial and cremation, and cremation carries mantra force — enjoined, not optional. Bhaty reads this as an empirical public-health response: below the Narmada the forest is tropical, and bodies left exposed there produce disease. Cremation is both the reason India lacks skeletal series and evidence of the intelligence that produced the practice.</p>
+  </article>
+</section>
+
+<!-- ================= ERA V ================= -->
+<section class="era" id="era-5" data-num="V" data-name="Toba">
+  <div class="era-head">
+    <div class="span">74,000 BCE</div>
+    <h2><span class="num">V.</span>Toba</h2>
+  </div>
+
+  <article class="entry" data-tags="arch">
+    <div class="meta"><span class="tags"><i class="tg arch">ARCH</i></span></div>
+    <h3>Jwalapuram</h3>
+    <p>A thick ash layer seals a Middle Palaeolithic occupation surface in the Jurreru valley. Stone tools of the <strong>same technology</strong> occur above and below it. Vegetation collapse is visible in the strata. Technique survived because enough carriers survived.</p>
+  </article>
+
+  <article class="entry" data-tags="gen">
+    <div class="meta"><span class="tags"><i class="tg gen">GEN</i></span></div>
+    <h3>Population</h3>
+    <p>One theory leaves some 10,000 people alive in India, who then repopulate. Megafaunal extinctions comparable to the Younger Dryas occur.</p>
+  </article>
+
+  <article class="entry" data-tags="text">
+    <div class="meta"><span class="tags"><i class="tg text">TEXT</i></span></div>
+    <h3>The Rigvedic record</h3>
+    <p>The <strong>Indra–Vritra / Sarama–Pani</strong> cycle. Vritra imprisons the cows in a cave — and <strong>go is light, not cattle</strong>. The earth is deprived of light for a long period. Indra sends Sarama to find them; the Panis intercept and bargain with her — <em>come to us, leave Indra</em> — and the negotiation runs a thousand years. The cows are recovered; Indra returns.</p>
+    <p>Ash blocking sunlight, vegetation collapse, survival on <em>kandamula</em>, ten thousand survivors carrying the memory. Bhaty is explicit that this is not a single episode: Indra–Vritra recurs, with another instance at 40,000 BCE. The cycle is a template for light-loss events, reused.</p>
+  </article>
+
+  <article class="entry" data-tags="gen text">
+    <div class="meta"><span class="tags"><i class="tg gen">GEN</i><i class="tg text">TEXT</i></span></div>
+    <h3>Haplogroup F and the Panchakrishti</h3>
+    <p>The major post-bottleneck expansion issues from Haplogroup F, arising in South Asia. Its initial lineages she identifies with the <strong>Panchajana / Panchakrishti</strong> of Rigveda — the five peoples, children of Nahusha, the five sons of Yayati.</p>
+  </article>
+</section>
+
+<!-- ================= ERA VI ================= -->
+<section class="era" id="era-6" data-num="VI" data-name="Dispersal">
+  <div class="era-head">
+    <div class="span">70,000 BCE</div>
+    <h2><span class="num">VI.</span>Dispersal</h2>
+  </div>
+
+  <article class="entry" data-tags="gen">
+    <div class="meta"><span class="tags"><i class="tg gen">GEN</i></span></div>
+    <h3>Out of India, not only out of Africa</h3>
+    <p>Mitochondrial <strong>L3</strong> emerges here and disperses toward <strong>East Africa</strong> — the direction facing India. Following Premendra Priyadarshi, Bhaty points to the <strong>Fulani</strong>, whose female phenotype she reads as Indian in character. Female mitochondrial lineages persist far longer than male lineages, which are repeatedly replaced.</p>
+    <p>The pattern beneath it is demographic, not military. Every Indian crisis produces dispersal outward and later return. Catastrophic male mortality leaves women without partners, and women go where partners are.</p>
+  </article>
+
+  <article class="entry" data-tags="text">
+    <div class="meta"><span class="tags"><i class="tg text">TEXT</i></span></div>
+    <h3>Yama and Yami</h3>
+    <p>The Rigvedic dialogue: twin brother and sister, and Yami urges Yama to couple with her. Bhaty reads the urgency as scarcity rather than attraction — <em>no other male exists</em>. In the episode Yama dies, confirming the absence of a male line. She connects it to L3, and to the <strong>Yamuna</strong>, which had two tributaries: one Yama, one Yami.</p>
+  </article>
+
+  <article class="entry" data-tags="geo">
+    <div class="meta"><span class="when">50,000 BCE</span><span class="tags"><i class="tg geo">GEO</i></span></div>
+    <h3>Yamuna joins the Ganga</h3>
+    <p>She expects this to push back once a new palaeochannel is dated, potentially close to Toba — an eruption of that violence would ripple through the Himalayan Frontal Thrust and Hindu Kush, bringing not only ashfall but lava, earthquakes and drainage reorganisation.</p>
+  </article>
+
+  <article class="entry" data-tags="text gen">
+    <div class="meta"><span class="when">70,000 BCE</span><span class="tags"><i class="tg text">TEXT</i><i class="tg gen">GEN</i></span></div>
+    <h3>The king-lists begin</h3>
+    <p>Manu to <strong>Ikshvaku</strong>, and the parallel branches. The start of the 70,000-year genealogical span Bhaty holds to be recoverable.</p>
+  </article>
+</section>
+
+<!-- ================= ERA VII ================= -->
+<section class="era" id="era-7" data-num="VII" data-name="The Bears &amp; the Pole">
+  <div class="era-head">
+    <div class="span">54,000 BCE</div>
+    <h2><span class="num">VII.</span>The Bears and the Pole</h2>
+  </div>
+
+  <article class="entry" data-tags="astro text">
+    <div class="meta"><span class="tags"><i class="tg astro">ASTRO</i><i class="tg text">TEXT</i></span></div>
+    <h3>Riksha becomes Saptarshi</h3>
+    <p>Before the Big Dipper was called Saptarshi it was called <strong>Riksha</strong> — and there was a king named Riksha. <em>Riksha</em> means <strong>bear</strong>. Big Dipper, Big Bear; Little Dipper, Little Bear. Greek catalogues still carry Ursa Major and Ursa Minor with the bear iconography intact — the same retention pattern as the Shunah-Sirau in Greek dog-lore. The association dates to 54,000 BCE; the Saptarshi designation follows, and <strong>Arundhati</strong> is introduced after that.</p>
+  </article>
+
+  <article class="entry" data-tags="astro text">
+    <div class="meta"><span class="tags"><i class="tg astro">ASTRO</i><i class="tg text">TEXT</i></span></div>
+    <h3>Arundhati as instrument, not sentiment</h3>
+    <p>The Vivaha mantra's instruction to look at Arundhati, preserved in the Shrauta Sutras, is not about conjugal fidelity. <strong>Arundhati sits at the limit of naked-eye magnitude.</strong> If a star that faint can be resolved at the north celestial pole point, the pole star is confirmed visible — otherwise the designation cannot be conferred. The procedure: find Saptarshi first, then follow it north. The romantic reading is a later overlay on an observational test.</p>
+    <p>This is Bhaty's clearest single demonstration of method — a ritual instruction recovered as a calibration protocol.</p>
+  </article>
+
+  <article class="entry" data-tags="text">
+    <div class="meta"><span class="tags"><i class="tg text">TEXT</i></span></div>
+    <h3>Varahamihira's injunction</h3>
+    <p>Without astronomy — without knowing day and night, season and hour — there is no moksha. Astronomy was a universal obligation, not a specialist's trade.</p>
+  </article>
+</section>
+
+<!-- ================= ERA VIII ================= -->
+<section class="era" id="era-8" data-num="VIII" data-name="Instability">
+  <div class="era-head">
+    <div class="span">50,000 – 40,000 BCE</div>
+    <h2><span class="num">VIII.</span>Instability</h2>
+  </div>
+
+  <article class="entry" data-tags="geo">
+    <div class="meta"><span class="when">50,000 BCE</span><span class="tags"><i class="tg geo">GEO</i></span></div>
+    <h3>Lonar</h3>
+    <p>An impact event in Maharashtra in this window.</p>
+  </article>
+
+  <article class="entry" data-tags="geo text">
+    <div class="meta"><span class="when">40,000 BCE</span><span class="tags"><i class="tg geo">GEO</i><i class="tg text">TEXT</i></span></div>
+    <h3>A second light-loss episode</h3>
+    <p>A further volcanic or meteoric event, and a further Indra–Vritra repetition. Distinct from Toba.</p>
+  </article>
+
+  <article class="entry" data-tags="geo">
+    <div class="meta"><span class="when">40,000 – 35,000 BCE</span><span class="tags"><i class="tg geo">GEO</i></span></div>
+    <h3>Himalayan glaciation</h3>
+    <p>Heavy movement along the Himalayan Frontal Thrust. <strong>High glaciation begins in the Himalaya earlier than the global onset.</strong></p>
+  </article>
+
+  <article class="entry" data-tags="text geo">
+    <div class="meta"><span class="tags"><i class="tg text">TEXT</i><i class="tg geo">GEO</i></span></div>
+    <h3>Ganga Dashahara as glaciation memory</h3>
+    <p>Ganga descends too violently, and Shiva binds her in his locks to slow her — the river converted to ice and released gradually.</p>
+  </article>
+</section>
+
+<!-- ================= ERA IX ================= -->
+<section class="era" id="era-9" data-num="IX" data-name="The Falling Ocean">
+  <div class="era-head">
+    <div class="span">40,000 – 22,000 BCE</div>
+    <h2><span class="num">IX.</span>Brihadratha and the Falling Ocean</h2>
+  </div>
+
+  <article class="entry" data-tags="geo">
+    <div class="meta"><span class="tags"><i class="tg geo">GEO</i></span></div>
+    <h3>The eustatic collapse</h3>
+    <p>Sea level fell <strong>120 metres</strong> across this span. The fall was not uniform: at <strong>34,500 BCE</strong> it steepens to roughly 20 m within 500 years — fast enough to be witnessed within a single life.</p>
+  </article>
+
+  <article class="entry key" data-tags="text astro geo">
+    <div class="keylabel">✦ The only memory anywhere of the sea going down</div>
+    <div class="meta"><span class="tags"><i class="tg text">TEXT</i><i class="tg astro">ASTRO</i><i class="tg geo">GEO</i></span></div>
+    <h3>Brihadratha's observation</h3>
+    <p>Maitri Upanishad 1.4. The king enumerates <em>maharnavanam shoshanam</em> — the drying of the great oceans — alongside <em>shailanam prapatanam</em>, the falling of mountains; <em>dhruvasya prachalanam</em>, the shifting of the pole star; <em>nimajjanam prithivyah</em>, the sinking of the earth; and <em>sthanad apasaranam suranam</em>, the gods' departure from their stations. Five distinct geophysical and astronomical observations in one passage.</p>
+    <p><strong>Why it is decisive:</strong> every flood myth on earth records water <em>rising</em>. <strong>This is the only memory anywhere of the sea going down</strong> — and it is the correct observation for its epoch. Its uniqueness is what makes it unforgeable. Gradual change does not enter human memory; this was steep enough to be seen.</p>
+    <p>Against the reading that Brihadratha was merely despondent and projecting: the sequence in the text runs <em>events, therefore remorse</em> — not the reverse. And no verse enters a Brahmana or Samhita without clearing sixteen parameters. Nobody bluffs there. Nobody inserts an upama or an alankara there.</p>
+  </article>
+
+  <article class="entry" data-tags="astro">
+    <div class="meta"><span class="tags"><i class="tg astro">ASTRO</i></span></div>
+    <h3>Axial tilt, read directly</h3>
+    <p>"The earth is sinking" is Bhaty's decoding of obliquity change. They lacked scientific vocabulary, not observation. The tilt migrates 24.5° → 23.5° → 22.5° and back on a <strong>41,000-year cycle</strong>, and the migrating tropic line is inscribed on the landscape:</p>
+    <div class="tablewrap"><table>
+      <tr><th>Obliquity</th><th>Solstice line falls over</th></tr>
+      <tr><td>24.5°</td><td>northern extreme</td></tr>
+      <tr><td>23.5°</td><td><strong>Ujjain</strong> — the Modhera Sun Temple sits on it</td></tr>
+      <tr><td>22.5°</td><td><strong>Omkareshwar / Mandhata island</strong></td></tr>
+    </table></div>
+    <p>The chain of sun temples marks the track. <em>Jyotisha</em> is the science of light; light is the sun; the tropic is where the sun turns. Precession has already carried the solstice point out of Cancer into Gemini — the name "Tropic of Cancer" is itself now obsolete, which is an argument that it was coined when it was still accurate.</p>
+  </article>
+
+  <article class="entry" data-tags="astro">
+    <div class="meta"><span class="tags"><i class="tg astro">ASTRO</i></span></div>
+    <h3>The convergence</h3>
+    <p>Vernal equinox in Magha, the steep eustatic fall, and the tilt observation all point to one window. So many independent observations cannot converge by coincidence, and cannot be produced by despondency. A later Magha vernal equinox at 8,000 BCE is disambiguated by direction: at that epoch the sea was rising, not falling.</p>
+  </article>
+</section>
+
+<!-- ================= ERA X ================= -->
+<section class="era" id="era-10" data-num="X" data-name="War &amp; the Deepest Low">
+  <div class="era-head">
+    <div class="span">34,500 – 22,000 BCE</div>
+    <h2><span class="num">X.</span>War and the Deepest Low</h2>
+  </div>
+
+  <article class="entry" data-tags="geo astro">
+    <div class="meta"><span class="when">34,500 BCE</span><span class="tags"><i class="tg geo">GEO</i><i class="tg astro">ASTRO</i></span></div>
+    <h3>Brihadratha's datum</h3>
+    <p>Steepest sea-level decline, vernal equinox in Magha, tilt in motion. Three signatures, one epoch.</p>
+  </article>
+
+  <article class="entry" data-tags="astro text">
+    <div class="meta"><span class="when">30,000 BCE</span><span class="tags"><i class="tg astro">ASTRO</i><i class="tg text">TEXT</i></span></div>
+    <h3>The Battle of Ten Kings</h3>
+    <p><strong>Critically dated for the first time.</strong> The evidence is the <strong>rising of Agastya named within the hymn itself</strong>, in the Parushni context. The Dasharajna becomes the first fixed point in Rigvedic <em>history</em> as against Rigvedic <em>astronomy</em>, and it resolves what had been treated as unanswerable: who the Tritsus were, whether the Ikshvakus participated, who the Vasishthas and Agastyas were, the direction of Sudas's advance.</p>
+  </article>
+
+  <article class="entry" data-tags="text">
+    <div class="meta"><span class="tags"><i class="tg text">TEXT</i></span></div>
+    <h3>Warfare of the period</h3>
+    <p>Rigveda repeatedly mentions building small dams and diverting watercourses as an instrument of war — recognisably the logic of the modern Indus Waters debate. Sudas came from across the Indus carrying <strong>short bows</strong> against the region's long bows; short bows appear around 30,000 BCE for close-range hunting in heavy northern snow, where the rishis preferred to live.</p>
+  </article>
+
+  <article class="entry" data-tags="text geo">
+    <div class="meta"><span class="tags"><i class="tg text">TEXT</i><i class="tg geo">GEO</i></span></div>
+    <h3>The missing season</h3>
+    <p>Rigveda knows <strong>five seasons, not six</strong>. <strong>Shishira</strong> — late winter into early spring — is absent. Winter ran long enough to swallow it. Hence <em>shatahima</em>, a hundred winters, rather than the later <em>jivema sharadah shatam</em>, a hundred autumns: the year was counted in winters because winter was the dominant fact. <em>Shatahima suvira</em> recurs in <strong>Mandala VI</strong>, the mandala carrying the Dasharajna material.</p>
+  </article>
+
+  <article class="entry" data-tags="text">
+    <div class="meta"><span class="tags"><i class="tg text">TEXT</i></span></div>
+    <h3>Against Talageri</h3>
+    <p>Shrikant Talageri holds Mandala VI among the oldest. Bhaty holds the opposite: the Dasharajna is the <strong>newest and last episode</strong>, the point at which Rigveda was cut off. Her mandala chronology runs against his at exactly this point, and she states the disagreement plainly.</p>
+  </article>
+
+  <article class="entry" data-tags="text">
+    <div class="meta"><span class="when">30,000 – 26,000 BCE</span><span class="tags"><i class="tg text">TEXT</i></span></div>
+    <h3>Rigveda closes</h3>
+    <p>Bharata attempted to continue it; there it stopped. The <strong>Ikshvakus</strong> were the paramount house across the subcontinent — to Afghanistan, present Pakistan and eastern Iran in the west, Burma in the east, and southward. <strong>Pandyas, Cheras and Cholas all claim Ikshvaku descent</strong>, the Pandyas most insistently; lunar-dynasty affiliation is a later addition.</p>
+  </article>
+
+  <article class="entry" data-tags="text">
+    <div class="meta"><span class="when">26,000 BCE</span><span class="tags"><i class="tg text">TEXT</i></span></div>
+    <h3>Language begins to diverge</h3>
+    <p>Continuity runs unbroken from 220,000 to 26,000 BCE inside Rigveda; divergence is post-Rigvedic. By Ramayana there are eight or nine languages in play — Rama remarks that the vanaras can be neither told apart nor understood, the tactical problem being how to avoid killing Sugriva by mistake.</p>
+  </article>
+
+  <article class="entry" data-tags="astro">
+    <div class="meta"><span class="when">26,000 BCE</span><span class="tags"><i class="tg astro">ASTRO</i></span></div>
+    <h3>Agastya visible from Kurukshetra</h3>
+    <p>Canopus is still observable from that latitude. It will not remain so.</p>
+  </article>
+
+  <article class="entry" data-tags="text">
+    <div class="meta"><span class="when">24,000 BCE</span><span class="tags"><i class="tg text">TEXT</i></span></div>
+    <h3>Shambara and Mesopotamia</h3>
+    <p>Mesopotamian record names an Asura ruler <strong>Shambara</strong>, son of Bara, governing Mesopotamia. <strong>The same name appears in Rigveda</strong>, where his parentage is unstated — Divodasa goes out repeatedly, breaks his <strong>ninety-nine forts</strong>, and returns. Contact with Mesopotamia is not myth; it is a documented adversary relationship.</p>
+  </article>
+
+  <article class="entry" data-tags="astro text">
+    <div class="meta"><span class="when">23,000 – 22,000 BCE</span><span class="tags"><i class="tg astro">ASTRO</i><i class="tg text">TEXT</i></span></div>
+    <h3>Phalguni</h3>
+    <p>Read as vernal equinox, Phalguni yields two dates: 10,000 BCE on the Brahmana-gana reading, and <strong>23,000 BCE on the Gopatha Brahmana</strong> reading, which is Bhaty's own. <strong>Bal Gangadhar Tilak</strong>, in <em>Orion</em> (1893), had already conceded that the Phalguni vernal equinox pushes to 22,000 BCE. The deepest date here is not a modern invention — Tilak reached it over a century ago, and the discipline declined to follow.</p>
+  </article>
+
+  <article class="entry" data-tags="astro geo text">
+    <div class="meta"><span class="when">22,000 BCE</span><span class="tags"><i class="tg astro">ASTRO</i><i class="tg geo">GEO</i><i class="tg text">TEXT</i></span></div>
+    <h3>Agastya drinks the ocean</h3>
+    <p>The Last Glacial Maximum. Sea level at its floor, 120 m below present. <strong>Agastya drank the sea</strong> — the level was that low. The most economical myth-to-geology mapping in her work. Konkan, Kerala and the Tamil coast emerge as new land; coral becomes visible; vast tracts turn fertile within a thousand years. Land 25 km beyond the present coastline was habitable.</p>
+  </article>
+
+  <article class="entry" data-tags="paleo text">
+    <div class="meta"><span class="when">Post-22,000 BCE</span><span class="tags"><i class="tg paleo">PALEO</i><i class="tg text">TEXT</i></span></div>
+    <h3>Tigers enter India</h3>
+    <p><strong>Tigers are absent from Rigveda</strong> — because they were not yet here.</p>
+  </article>
+
+  <article class="entry" data-tags="text geo">
+    <div class="meta"><span class="when">22,000 BCE</span><span class="tags"><i class="tg text">TEXT</i><i class="tg geo">GEO</i></span></div>
+    <h3>Parashurama reclaims land from the sea</h3>
+    <p>Land taken back from Varuna: exposed by the falling ocean, and attributed to Parashurama.</p>
+  </article>
+</section>
+
+<!-- ================= ERA XI ================= -->
+<section class="era" id="era-11" data-num="XI" data-name="Return, &amp; the Rising Sea">
+  <div class="era-head">
+    <div class="span">22,000 – 16,000 BCE</div>
+    <h2><span class="num">XI.</span>Return, and the Rising Sea</h2>
+  </div>
+
+  <article class="entry" data-tags="gen arch text">
+    <div class="meta"><span class="tags"><i class="tg gen">GEN</i><i class="tg arch">ARCH</i><i class="tg text">TEXT</i></span></div>
+    <h3>Parashurama and Parahshum</h3>
+    <p>Parashurama's people are the <strong>Parahshum</strong> — a narrow strip between eastern Iran and Baluchistan, known to Assyriology as <strong>Marhashi</strong> and in direct contact with Babylonia from Sargon of Akkad onward. From this small territory they repeatedly entered the subcontinent, fought the Kshatriyas, and withdrew; likewise Divodasa moved out past Parahshum to engage Sumer and return. <strong>Samanta Panchaka</strong> recurs across the record on the same pattern.</p>
+    <p>Parashurama is <strong>Bhrigu-vamsha, not Ikshvaku</strong>. <em>Bhrigu</em> points to the <strong>Bharuch</strong> region; the Bhrigus were the great navigators, which is why the names cluster on the coast and why Gujarat holds the maximum concentration of Bhargavas.</p>
+  </article>
+
+  <article class="entry" data-tags="gen text">
+    <div class="meta"><span class="tags"><i class="tg gen">GEN</i><i class="tg text">TEXT</i></span></div>
+    <h3>Bhriguisation and the 1:16 ratio</h3>
+    <p>By Mahabharata the ratio stands at <strong>sixteen women to one man</strong>. One man cannot repopulate at that ratio, and the <strong>Bhrigus and Jamadagnis</strong> — haplogroups <strong>J2b</strong> and <strong>R1</strong> — expand as a consequence.</p>
+    <p><strong>This was female selection, not invasion.</strong> Women chose the Bhrigus, which is why the resulting populations resemble each other. The driver is soteriological: without progeny there is no pindadana, no antyeshti, and therefore no moksha. Natural selection operated through women's choice. Bhaty offers this as the direct alternative to the Aryan Invasion account of North Indian genetic structure — the robust Iranian content in northern India, and the Iranian genes among the Nilgiri <strong>Toda</strong>, read as return-migration rather than incursion. J2b is also found in Arabians.</p>
+  </article>
+
+  <article class="entry" data-tags="gen">
+    <div class="meta"><span class="tags"><i class="tg gen">GEN</i></span></div>
+    <h3>The circulation model</h3>
+    <p>Genes go out from India, populate eastern Iran, and come back. Three later waves are named: a first wave, the Neolithic wave, the Indus civilisation wave. <strong>R1a, R1b and J2</strong> are accordingly India-centric in origin and move outward to Europe. Not a one-way migration — a circuit.</p>
+  </article>
+
+  <article class="entry" data-tags="astro arch text">
+    <div class="meta"><span class="when">20,000 – 12,000 BCE</span><span class="tags"><i class="tg astro">ASTRO</i><i class="tg arch">ARCH</i><i class="tg text">TEXT</i></span></div>
+    <h3>Nataraja in the sky</h3>
+    <p>A <strong>dancing constellation</strong> — <em>kuttu</em> — appears in Tamil <strong>navigational manuals</strong>. It is <strong>Orion</strong>, the same constellation central to Egyptian practice. This is the earliest evidence for Shaivism: Shiva worshipped as the dancer some 20,000 years ago.</p>
+    <p>Agastya and Shaivism are inseparable; Agastya gave Tamil its grammar, and Rigveda cannot be detached from Tamil. The <strong>Indus seal</strong> — not the Pashupati seal, but the one showing a figure standing amid foliage in a crown with <strong>three lines</strong> — is Orion's belt, the posture unmistakably Nataraja. Ethnographic memory records Nataraja worshipped in <strong>wood</strong> before bronze, which explains the absence of early survivals. Chola bronze comes some 16,000 years after the sky-form.</p>
+  </article>
+
+  <article class="entry" data-tags="astro text">
+    <div class="meta"><span class="when">19,000 BCE</span><span class="tags"><i class="tg astro">ASTRO</i><i class="tg text">TEXT</i></span></div>
+    <h3>Agastya crosses the Vindhyas</h3>
+    <p>Canopus, driven south by axial precession, ceases to be visible from Kurukshetra and becomes visible only from progressively lower latitudes. <strong>19,000 BCE is the epoch at which it crosses the Vindhya line.</strong> The myth of Agastya crossing the Vindhyas and going south <em>is</em> this transit. By 13,000–11,000 BCE the whole <strong>Agastya Malai</strong> range falls within its visibility, and the <strong>Mahendragiri</strong> location given in Ramayana confirms the southward track geographically.</p>
+  </article>
+
+  <article class="entry" data-tags="arch geo">
+    <div class="meta"><span class="when">18,000 BCE</span><span class="tags"><i class="tg arch">ARCH</i><i class="tg geo">GEO</i></span></div>
+    <h3>Poompuhar</h3>
+    <p>Harbour structures <strong>25 km offshore</strong>, at depth near the palaeo-river mouth. Navigation predates them: <em>nau</em> and navigation appear in the Sukta mantras. Southern recensions preserve the memory of Poompuhar's deluge. The consequence is that the Pandyas are older than the Cholas, and Kishkindha older still — these are among the oldest navigators on record.</p>
+  </article>
+
+  <article class="entry" data-tags="paleo arch text">
+    <div class="meta"><span class="when">16,000 BCE</span><span class="tags"><i class="tg paleo">PALEO</i><i class="tg arch">ARCH</i><i class="tg text">TEXT</i></span></div>
+    <h3>Agriculture in the Gangetic plains</h3>
+    <p>Following Anil Suri: the full grain list of the <strong>Chamakam</strong> — every variety of lentil, and rice — is attested archaeobotanically in the Gangetic plains at 16,000 BCE, predating the conventional Neolithic origin by some ten thousand years. The <strong>parali</strong> signature confirms it: stubble was cut and burnt, and it is in the burn layers that the Chamakam's named remains are recovered. Cutting, stubble-burning and cultivation are all in place before Ramayana.</p>
+    <p>Bhaty notes the stratigraphic problem honestly. In the desert the layers are buried; at Mehrgarh we date to 7,000 BCE only because we have not reached the lower levels. The Gangetic plains and the <strong>Swat</strong> region intermingled — what was practised on one was known on the other, because the whole was <strong>ganarajya</strong>. The plough is first attributed to <strong>Kuru</strong> in the Brahmanas, while a six-row plough turns up in the Levant. Technology appears and disappears; the Indian stratum simply has not been dug.</p>
+  </article>
+
+  <article class="entry" data-tags="geo text">
+    <div class="meta"><span class="when">16,000 BCE</span><span class="tags"><i class="tg geo">GEO</i><i class="tg text">TEXT</i></span></div>
+    <h3>Bhagiratha</h3>
+    <p>Later than the 22,000 BCE low, not contemporaneous with it. Sagara's sons' ashes require Ganga for their release. A breakage at <strong>Gangotri</strong> releases a second branch, <strong>Jahnavi</strong>; the two meet and the Ganga proper is formed; the Yamuna then joins. <strong>Ganga expands and begins refilling the ocean</strong> — which is why the sea, at its floor at 22,000 BCE, is rising by 16,000 BCE.</p>
+    <p>The etymological knot: <em>sagara</em>, ocean, is named <strong>from King Sagara</strong>. The ocean takes its name from the man, not the reverse. The Bhagiratha cycle is a geomorphological account of drainage capture and marine transgression, told as genealogy.</p>
+  </article>
+
+  <article class="entry" data-tags="paleo text">
+    <div class="meta"><span class="when">12,000 – 11,000 BCE</span><span class="tags"><i class="tg paleo">PALEO</i><i class="tg text">TEXT</i></span></div>
+    <h3>Mushaka disperses</h3>
+    <p>The house mouse begins spreading <strong>from India</strong>. <strong>Mushaka appears in Rigveda</strong> — so the animal, and by implication the granary, precede even the 16,000 BCE horizon. The logic is the standard commensal-origin argument: no granary, no mouse; no agriculture, no granary. The mouse is an indirect but hard proxy for stored grain. Where India is denied priority in every other domain, in this one it is named as the source.</p>
+  </article>
+</section>
+
+<!-- ================= ERA XII ================= -->
+<section class="era" id="era-12" data-num="XII" data-name="Two Pole Stars, &amp; Ramayana">
+  <div class="era-head">
+    <div class="span">13,000 – 11,000 BCE</div>
+    <h2><span class="num">XII.</span>Two Pole Stars, and Ramayana</h2>
+  </div>
+
+  <article class="entry" data-tags="astro text">
+    <div class="meta"><span class="tags"><i class="tg astro">ASTRO</i><i class="tg text">TEXT</i></span></div>
+    <h3>Brahma Rashi at the pole</h3>
+    <p><strong>Vega / Lyra</strong> held the pole in this window and is named <strong>Brahma Rashi</strong> in Ramayana and again, with the identical term, in the <strong>Parashara Tantra</strong>. It is called <em>rashi</em> — a heap — because Lyra was reckoned a bunch of stars rather than one.</p>
+  </article>
+
+  <article class="entry" data-tags="astro text">
+    <div class="meta"><span class="tags"><i class="tg astro">ASTRO</i><i class="tg text">TEXT</i></span></div>
+    <h3>Abhijit, in and out</h3>
+    <p>Taittiriya Brahmana, Taittiriya Samhita and Kathaka Samhita variously admit and exclude <strong>Abhijit</strong>. Taking Abhijit onto the ecliptic must date from before 26,000 BCE; it was removed once it became the pole star. No longer seen on the ecliptic, it is no longer propitiated — remembered as the twenty-eighth nakshatra, but with no distinct worship. Vega returns to the pole on a 13,000-year beat, so the removal will recur.</p>
+    <p>The same befell <strong>Agastya</strong>, once counted among the Saptarshis and then absent from them. What is not visible is not propitiated. <strong>Visibility governs the liturgy</strong> — which is exactly what makes the liturgy datable.</p>
+  </article>
+
+  <article class="entry" data-tags="astro text">
+    <div class="meta"><span class="when">12,000 BCE</span><span class="tags"><i class="tg astro">ASTRO</i><i class="tg text">TEXT</i></span></div>
+    <h3>Ramayana</h3>
+    <p>Dated by the <strong>two-pole-star condition</strong>: Vega (Brahma Rashi) and Canopus (Agastya) simultaneously satisfying the text's requirements. Bhaty's collaborative work with Nilesh Oak.</p>
+  </article>
+
+  <article class="entry" data-tags="text">
+    <div class="meta"><span class="tags"><i class="tg text">TEXT</i></span></div>
+    <h3>The south in Ramayana</h3>
+    <p><strong>Chola, Keralan and Pandya</strong> are named; <em>Chera</em> is not — the text has Keralan where later usage gives Chera. The <strong>Karnatakas</strong> are Sugriva's clan. The vanaras are not monkeys but forest-dwelling peoples with a distinct manner of dress, of the kind still worn by tribal chiefs in Nagaland and visible on the Pashupati seal. Their territory is <strong>Kishkindha</strong>, and Chola, Kerala and Pandya already fall within it.</p>
+  </article>
+
+  <article class="entry" data-tags="text geo">
+    <div class="meta"><span class="tags"><i class="tg text">TEXT</i><i class="tg geo">GEO</i></span></div>
+    <h3>Climate</h3>
+    <p>Near Nashik, Lakshmana describes wheat fields under mist, the cold intense and the winters long. At least five degrees colder than present.</p>
+  </article>
+
+  <article class="entry" data-tags="text">
+    <div class="meta"><span class="tags"><i class="tg text">TEXT</i></span></div>
+    <h3>Raghu and the Hunas</h3>
+    <p>Slotted after Bhagiratha, before Ramayana.</p>
+  </article>
+</section>
+
+<!-- ================= ERA XIII ================= -->
+<section class="era" id="era-13" data-num="XIII" data-name="After Ramayana">
+  <div class="era-head">
+    <div class="span">Toward the historical period</div>
+    <h2><span class="num">XIII.</span>After Ramayana</h2>
+  </div>
+
+  <article class="entry" data-tags="gen text">
+    <div class="meta"><span class="tags"><i class="tg gen">GEN</i><i class="tg text">TEXT</i></span></div>
+    <h3>Mahabharata</h3>
+    <p>The 1:16 ratio again, and the same consequence: mass male mortality across the akshauhinis, women seeking partners, a second round of Bhriguisation.</p>
+  </article>
+
+  <article class="entry" data-tags="geo text">
+    <div class="meta"><span class="tags"><i class="tg geo">GEO</i><i class="tg text">TEXT</i></span></div>
+    <h3>Dwarka</h3>
+    <p>Sea level, rising since 22,000 BCE, eventually drowns Dwarka — held in ethnographic memory — then progressively the other coastal settlements.</p>
+  </article>
+
+  <article class="entry" data-tags="arch">
+    <div class="meta"><span class="tags"><i class="tg arch">ARCH</i></span></div>
+    <h3>Indus Valley Civilisation</h3>
+    <p>The <strong>Nataraja seal</strong>, Shiva with foliage and the three-line Orion crown. In Gujarat, Lothal, Dholavira, Dhodera and Dhunai saturate the region, and the local toponyms recur on the seals. Independent trade with Mesopotamia, Egypt and Greece — possible because cultural access predated the trade by tens of millennia. <strong>Toponymic continuity</strong> holds throughout: Ujjain, Kurukshetra, Ayodhya persist unbroken. The names never needed re-coining.</p>
+  </article>
+
+  <article class="entry" data-tags="arch">
+    <div class="meta"><span class="tags"><i class="tg arch">ARCH</i></span></div>
+    <h3>Bhimbetka and the Ratnagiri petroglyphs</h3>
+    <p>Chariot depictions at Bhimbetka appear non-local — an event recorded rather than a scene observed. The continuity extends south to the <strong>Ratnagiri petroglyphs</strong>, where most motif combinations find their parallels in Mesopotamia. One figure stands holding <strong>two tigers</strong> — the <em>Master of Animals</em>, among the most widely distributed formulas in West Asian art, and precisely the material trace the Parahshum circuit predicts.</p>
+  </article>
+
+  <article class="entry" data-tags="text">
+    <div class="meta"><span class="tags"><i class="tg text">TEXT</i></span></div>
+    <h3>Mahajanapadas</h3>
+    <p>Sixteen, predominantly northern. Before Partition, India included present-day Pakistan, Afghanistan and Burma; parts of the Arabian peninsula used the Indian passport and rupee into the British period. Overland and maritime contact with Mesopotamia follows from that geography rather than requiring explanation. The southern polities remained unconquered — southern India never came under the Mughals — preserving language and custom locally while <strong>Aiyangars</strong> came south to teach the Vedas. <strong>Nayars were matrilineal</strong>, and Nayar-Aiyangar issue formed a Kshatriya line.</p>
+  </article>
+
+  <article class="entry" data-tags="text">
+    <div class="meta"><span class="tags"><i class="tg text">TEXT</i></span></div>
+    <h3>Chola maritime expansion</h3>
+    <p>The Cholas did in the east what had earlier been done toward Mesopotamia. When that trade declined, they turned to Southeast Asia. The only Indian power to invade across the sea — and the practice was old.</p>
+  </article>
+
+  <article class="entry" data-tags="">
+    <div class="meta"><span class="when">Close of the dynasty</span></div>
+    <h3>The seventy-thousand-year span ends</h3>
+    <p>Mahapadma Nanda kills the last Ikshvaku king, closing the seventy-thousand-year span.</p>
+  </article>
+</section>
+
+<!-- ================= THEMES ================= -->
+<div class="themes-head" id="themes">
+  <div class="span">Beyond the timeline</div>
+  <h2>Continuities and Method</h2>
+  <p>Five threads that run through the whole chronology rather than sitting at one date.</p>
+</div>
+
+<section class="era theme" id="theme-1" data-num="✦" data-name="The Language">
+  <div class="era-head">
+    <div class="span">An unbroken 220,000-year line</div>
+    <h2>The Language</h2>
+  </div>
+
+  <article class="entry" data-tags="text">
+    <div class="meta"><span class="tags"><i class="tg text">TEXT</i></span></div>
+    <h3>Chandobhasha, not Paninian Sanskrit</h3>
+    <p>Rigvedic language is <strong>chandobhasha</strong>, not Paninian Sanskrit — it is <strong>bhasha</strong>, spoken language. It does not obey Panini; the seventh vibhakti appears where the rule forbids. It is not sophisticated. It is <em>rich</em>, in the sense of holding more.</p>
+    <p>The <strong>ghasa</strong> argument makes the point: Atharvaveda uses <em>ghasa</em> for grass, the ordinary and still-current word, not an elaborate alternative. Cows eat <em>ghasa</em>. Ordinary speech survives inside the text.</p>
+  </article>
+
+  <article class="entry" data-tags="text">
+    <div class="meta"><span class="tags"><i class="tg text">TEXT</i></span></div>
+    <h3>Why nothing changed</h3>
+    <p>The rishi was <strong>drashta</strong>, one who saw. Because it was seen and not composed, it was fixed as mantra so later generations could not alter it. Hence <strong>shruti</strong>, what was heard. Hence <em>apaurusheyatva</em> — after tens of thousands of years of unaltered recitation, the only available explanation was that it was not of human making.</p>
+    <p>The counterfactual carries the argument. If Rigveda were continuously revised we would hold only the most recent recension. That we hold a 220,000-year-old memory is itself the proof that revision did not occur. <strong>Not a single syllable was lost.</strong></p>
+    <p>Loan direction runs outward: German <em>Zucker</em> from <em>shukra</em>.</p>
+  </article>
+</section>
+
+<section class="era theme" id="theme-2" data-num="✦" data-name="The Nakshatra Count">
+  <div class="era-head">
+    <div class="span">34 to 27</div>
+    <h2>The Nakshatra Count</h2>
+  </div>
+
+  <article class="entry" data-tags="astro text">
+    <div class="meta"><span class="tags"><i class="tg astro">ASTRO</i><i class="tg text">TEXT</i></span></div>
+    <h3>The twenty-ninth nakshatra</h3>
+    <p><strong>Maitrayani Samhita</strong>, among the oldest, carries a <strong>twenty-ninth nakshatra</strong> — <em>Brahmana nakshatra, Soma devata</em> — positioned between Krittika and the nakshatra preceding it. In two hundred years no one has extracted this evidence. The system contracted from an original <strong>34</strong>; the candidate names and lost ecliptic positions are the subject of her forthcoming paper. <strong>Abhijit</strong> oscillates in and out across the Samhitas and Brahmanas by the mechanism of pole-star promotion.</p>
+  </article>
+
+  <article class="entry" data-tags="astro text">
+    <div class="meta"><span class="tags"><i class="tg astro">ASTRO</i><i class="tg text">TEXT</i></span></div>
+    <h3>33 devatas, not 33 crore</h3>
+    <p>The corollary is <strong>33 devatas, not 33 crore</strong>. The thirty-three types are named in Rigveda itself, and both the deities and their wives were propitiated. The same doubling applies to the planets: <em>sapta yunjanti ekam chakram</em>, seven planets with the Sun counted as one — and in the following mantra <em>sapta svasarah</em>, the seven sisters performing their own parikrama. The astronomy is present, stated in a personified register.</p>
+  </article>
+</section>
+
+<section class="era theme" id="theme-3" data-num="✦" data-name="Flora &amp; Fauna">
+  <div class="era-head">
+    <div class="span">Chronological instruments</div>
+    <h2>Flora and Fauna</h2>
+  </div>
+
+  <article class="entry" data-tags="text paleo arch">
+    <div class="meta"><span class="tags"><i class="tg text">TEXT</i><i class="tg paleo">PALEO</i><i class="tg arch">ARCH</i></span></div>
+    <h3>Absence in the text dates the text</h3>
+    <p>Bhaty's most transferable method: <strong>absence in the text dates the text.</strong></p>
+    <div class="tablewrap"><table>
+      <tr><th>Species</th><th>Rigveda</th><th>Inference</th></tr>
+      <tr><td>Tiger</td><td>Absent</td><td>Tigers enter India only after 22,000 BCE</td></tr>
+      <tr><td>Wheat (<em>godhuma</em>)</td><td>Absent</td><td>Still wild, and not eaten</td></tr>
+      <tr><td>Cotton</td><td>Absent</td><td>Not yet in use — hence wool, not cotton</td></tr>
+      <tr><td>Wool, embroidery</td><td>Present</td><td>Cold climate, textile craft in place</td></tr>
+      <tr><td>Rice (<em>tandula</em>)</td><td>Present</td><td>Savanna-type land, many varieties</td></tr>
+      <tr><td><em>Nivara</em> (wild rice)</td><td>Present, and in Brahmanas and Ramayana</td><td>Gathered wild in such abundance it needed no cultivation</td></tr>
+      <tr><td><em>Mushaka</em> (mouse)</td><td>Present</td><td>Granaries, therefore stored grain, therefore agriculture</td></tr>
+      <tr><td><em>Svadhiti</em> (hand-axe)</td><td>Present, never again after</td><td>Lithic horizon</td></tr>
+    </table></div>
+  </article>
+
+  <article class="entry" data-tags="arch">
+    <div class="meta"><span class="tags"><i class="tg arch">ARCH</i></span></div>
+    <h3>Cotton — the direction-of-transfer test</h3>
+    <p>Cotton fibres mineralised on a copper bead at <strong>Mehrgarh, 6,000 BCE</strong>, are the earliest cotton in the Old World. Cotton appears in the <strong>Levant at 5,000 BCE</strong> — a thousand-year lag, in one direction only. Fibres recovered at Tel Tsaf in Israel have since been provenanced to the Indus Valley outright. The Neolithic package moved out of India, not into it.</p>
+  </article>
+</section>
+
+<section class="era theme" id="theme-4" data-num="✦" data-name="Reading the Sky">
+  <div class="era-head">
+    <div class="span">Method</div>
+    <h2>Reading the Sky Out of the Text</h2>
+  </div>
+
+  <article class="entry" data-tags="astro text">
+    <div class="meta"><span class="tags"><i class="tg astro">ASTRO</i><i class="tg text">TEXT</i></span></div>
+    <h3>Two registers, one set of names</h3>
+    <p>The line between terrestrial genealogy and celestial event is thin, because <strong>the same names serve both</strong>. Reading Rigveda correctly means knowing, verse by verse, which register is in play.</p>
+    <p>Her worked example is <strong>Shunahshepa</strong>. In Aitareya Brahmana: Harishchandra, an Ikshvaku, whose son <strong>Rohita</strong> is to be sacrificed; the sacrifice is deferred four or five years, and Shunahshepa is substituted. In Ramayana: the identical story, with <strong>Ambarisha</strong> in Harishchandra's place. The kings change across the two accounts. <strong>Shunahshepa does not.</strong></p>
+    <p><strong><em>Shunah-shepa</em> means "dog's tail."</strong> A fixed name that survives the substitution of every human character, and that names the body part of a dog, is not a person. It is a constellation — and the two tellings belong to two different cycles, not one event told twice.</p>
+  </article>
+
+  <article class="entry" data-tags="text">
+    <div class="meta"><span class="tags"><i class="tg text">TEXT</i></span></div>
+    <h3>On standard of proof</h3>
+    <p>A verse enters a Brahmana or Samhita only after clearing sixteen parameters; fabrication and ornament do not survive that filter. Astronomy is her instrument of choice because it admits no exaggeration — <em>there is a line in a thief's beard; those are lines, you pick them out.</em> The evidence is present and it dates itself.</p>
+  </article>
+
+  <article class="entry" data-tags="text">
+    <div class="meta"><span class="tags"><i class="tg text">TEXT</i></span></div>
+    <h3>On motive, unprompted</h3>
+    <p>There is no project of making Hindu civilisation grand or reverential. <em>Sanatana</em> is simply the word that arose because no one knows when it began.</p>
+  </article>
+
+  <article class="entry" data-tags="text">
+    <div class="meta"><span class="tags"><i class="tg text">TEXT</i></span></div>
+    <h3>On Indology</h3>
+    <p>She does not disparage the philological work — hundreds of scholars, largely foreign, doing letter-by-letter analysis at a level not currently matched in India. Their dating is the failure, not their scholarship, because they do not believe the dates. Even Max Müller conceded he did not know how old it was.</p>
+  </article>
+
+  <article class="entry" data-tags="text">
+    <div class="meta"><span class="tags"><i class="tg text">TEXT</i></span></div>
+    <h3>On succession</h3>
+    <p>The work is partial by design. <em>I have not done everything. There are other potentials here. The children who come after me will find something else.</em></p>
+  </article>
+</section>
+
+<section class="era theme" id="theme-5" data-num="✦" data-name="Aryan–Dravidian">
+  <div class="era-head">
+    <div class="span">There was never a divide</div>
+    <h2>The Aryan–Dravidian Question</h2>
+  </div>
+
+  <article class="entry" data-tags="astro text">
+    <div class="meta"><span class="tags"><i class="tg astro">ASTRO</i><i class="tg text">TEXT</i></span></div>
+    <h3>One sky, both ends of the subcontinent</h3>
+    <p>Bhaty closes on this, and asks that it be remembered. <strong>There was never a divide.</strong></p>
+    <p><strong>Shiva binds north and south from Rigvedic time</strong>, and so does Kartikeya. Six-headed Murugan appears in Himachal, Kashmir, Afghanistan <em>and</em> the south, and the reason is astronomical: <strong>Vishakha</strong> is Kartikeya's nakshatra, and <strong>Krittika</strong> — the Matrikas' — stands diametrically opposite it. The same sky produced the same god at both ends of the subcontinent.</p>
+    <p>The nakshatras are identical north and south. Pushya is <em>Puyam</em> in Malayalam — a pronunciation shift, an apabhramsha, nothing more. Other names diverge slightly further and cause confusion, but every one maps.</p>
+  </article>
+
+  <article class="entry" data-tags="astro text">
+    <div class="meta"><span class="tags"><i class="tg astro">ASTRO</i><i class="tg text">TEXT</i></span></div>
+    <h3>Agastya, the binding figure</h3>
+    <p><strong>Agastya is the binding figure</strong>: Canopus as star, Agastya as cult, Agastya as rishi, Agastya as the giver of Tamil grammar. Northern Vedic practitioners lived and taught in the south; southern Vedic scholars lived in Kashi; a Tamil population remains in present-day Pakistan today. It was a pan-India arrangement throughout.</p>
+    <p>Her closing caution turns inward as much as outward. <strong>The practice is being lost.</strong> Worship of each nakshatra is essential to being Hindu, and even the tithi is now forgotten. In the <strong>Agnichayana</strong>, every nakshatra is worshipped.</p>
+  </article>
+</section>
+
+<div id="noResults">
+  <div class="big">✦</div>
+  <p>Nothing in the timeline matches.<br>Try a different word, or clear the filters.</p>
+</div>
+
+</main>
+
+<footer>
+  <div class="fstar">✦</div>
+  <p><strong>The True Age of Bharat</strong> — compiled from a podcast transcription of the research of <strong>Rupa Bhaty</strong>: architect, archaeoastronomer, and reader of the sky out of the Vedic texts.</p>
+  <p>Evidence legend — <strong>Astro</strong> astronomical · <strong>Arch</strong> archaeological · <strong>Paleo</strong> paleoanthropological · <strong>Geo</strong> geological · <strong>Gen</strong> genetic · <strong>Text</strong> textual.</p>
+  <p>The dates and readings above are Bhaty's assessments as presented in her own words.</p>
+</footer>
+
+</div><!-- /shell -->
+
+<!-- ================= TOC SHEET ================= -->
+<div id="tocOverlay"></div>
+<div id="toc" role="dialog" aria-modal="true" aria-label="Chapters">
+  <div class="grip"></div>
+  <div class="toc-title">Chapters</div>
+  <div id="tocEras"></div>
+  <div class="toc-title">Continuities and Method</div>
+  <div id="tocThemes"></div>
+</div>
+
+<button id="topBtn" aria-label="Back to top"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V6M5 13l7-7 7 7"/></svg></button>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- starfield ---------- */
+  var sf = document.getElementById('starfield');
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  for (var i = 0; i < 70; i++) {
+    var s = document.createElement('span');
+    s.className = 'star' + ((!reduced && Math.random() < .35) ? ' tw' : '');
+    var sz = Math.random() < .85 ? (Math.random() * 1.3 + .6) : (Math.random() * 1.4 + 1.8);
+    s.style.width = s.style.height = sz.toFixed(1) + 'px';
+    s.style.left = (Math.random() * 100).toFixed(2) + '%';
+    s.style.top = (Math.random() * 100).toFixed(2) + '%';
+    s.style.opacity = (Math.random() * .5 + .3).toFixed(2);
+    if (s.classList.contains('tw')) s.style.animationDelay = (Math.random() * 3).toFixed(2) + 's';
+    sf.appendChild(s);
+  }
+
+  /* ---------- collect ---------- */
+  var eras = Array.prototype.slice.call(document.querySelectorAll('.era'));
+  var entries = Array.prototype.slice.call(document.querySelectorAll('.entry'));
+  entries.forEach(function(e){ e._txt = e.textContent.toLowerCase(); });
+  var themesHead = document.querySelector('.themes-head');
+
+  /* ---------- TOC ---------- */
+  var tocEras = document.getElementById('tocEras');
+  var tocThemes = document.getElementById('tocThemes');
+  var spans = {
+    'era-1':'1.5M – 300k','era-2':'300k – 250k','era-3':'220,000 BCE','era-4':'200k – 166k',
+    'era-5':'74,000 BCE','era-6':'70,000 BCE','era-7':'54,000 BCE','era-8':'50k – 40k',
+    'era-9':'40k – 22k','era-10':'34.5k – 22k','era-11':'22k – 16k','era-12':'13k – 11k','era-13':'onward'
+  };
+  eras.forEach(function(sec){
+    var a = document.createElement('a');
+    a.href = '#' + sec.id;
+    var isTheme = sec.classList.contains('theme');
+    a.className = isTheme ? 'th' : '';
+    a.innerHTML = '<span class="n">' + sec.dataset.num + '</span><span>' + sec.dataset.name + '</span>' +
+      (spans[sec.id] ? '<span class="rng">' + spans[sec.id] + '</span>' : '');
+    a.addEventListener('click', function(ev){
+      ev.preventDefault();
+      closeToc();
+      sec.scrollIntoView({behavior: reduced ? 'auto' : 'smooth'});
+    });
+    (isTheme ? tocThemes : tocEras).appendChild(a);
+  });
+
+  var toc = document.getElementById('toc'),
+      overlay = document.getElementById('tocOverlay'),
+      chapterBtn = document.getElementById('chapterBtn');
+  function openToc(){
+    toc.classList.add('open'); overlay.classList.add('open');
+    chapterBtn.setAttribute('aria-expanded', 'true');
+    var cur = toc.querySelector('a.cur'); if (cur) cur.scrollIntoView({block:'center'});
+  }
+  function closeToc(){
+    toc.classList.remove('open'); overlay.classList.remove('open');
+    chapterBtn.setAttribute('aria-expanded', 'false');
+  }
+  chapterBtn.addEventListener('click', function(){ toc.classList.contains('open') ? closeToc() : openToc(); });
+  overlay.addEventListener('click', closeToc);
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeToc(); });
+
+  /* ---------- search + filters ---------- */
+  var search = document.getElementById('search'),
+      clearBtn = document.getElementById('clearBtn'),
+      resultBar = document.getElementById('resultBar'),
+      noResults = document.getElementById('noResults'),
+      chips = Array.prototype.slice.call(document.querySelectorAll('.fchip')),
+      activeTags = [];
+
+  function clearMarks(root){
+    Array.prototype.slice.call(root.querySelectorAll('mark')).forEach(function(m){
+      m.replaceWith(document.createTextNode(m.textContent));
+    });
+    root.normalize();
+  }
+  function markMatches(root, q){
+    var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
+    var nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+    nodes.forEach(function(node){
+      var text = node.nodeValue, lower = text.toLowerCase(), idx = lower.indexOf(q);
+      if (idx === -1) return;
+      var frag = document.createDocumentFragment(), pos = 0;
+      while (idx !== -1) {
+        frag.appendChild(document.createTextNode(text.slice(pos, idx)));
+        var m = document.createElement('mark');
+        m.textContent = text.slice(idx, idx + q.length);
+        frag.appendChild(m);
+        pos = idx + q.length;
+        idx = lower.indexOf(q, pos);
+      }
+      frag.appendChild(document.createTextNode(text.slice(pos)));
+      node.parentNode.replaceChild(frag, node);
+    });
+  }
+
+  function apply(){
+    var q = search.value.trim().toLowerCase();
+    clearBtn.classList.toggle('show', !!q);
+    var shown = 0;
+    entries.forEach(function(e){
+      clearMarks(e);
+      var tags = (e.dataset.tags || '').split(' ');
+      var tagOk = activeTags.length === 0 || activeTags.some(function(t){ return tags.indexOf(t) !== -1; });
+      var qOk = !q || e._txt.indexOf(q) !== -1;
+      var vis = tagOk && qOk;
+      e.classList.toggle('hide', !vis);
+      if (vis) {
+        shown++;
+        if (q.length >= 2) markMatches(e, q);
+      }
+    });
+    eras.forEach(function(sec){
+      var any = sec.querySelector('.entry:not(.hide)');
+      sec.classList.toggle('hide', !any);
+    });
+    var anyThemeVisible = eras.some(function(s){ return s.classList.contains('theme') && !s.classList.contains('hide'); });
+    themesHead.style.display = anyThemeVisible ? '' : 'none';
+    var filtering = q || activeTags.length;
+    resultBar.style.display = filtering ? 'block' : 'none';
+    if (filtering) {
+      resultBar.innerHTML = '<b>' + shown + '</b> ' + (shown === 1 ? 'entry matches' : 'entries match');
+    }
+    noResults.style.display = (filtering && shown === 0) ? 'block' : 'none';
+  }
+
+  var deb;
+  search.addEventListener('input', function(){ clearTimeout(deb); deb = setTimeout(apply, 120); });
+  clearBtn.addEventListener('click', function(){ search.value = ''; apply(); search.focus(); });
+  chips.forEach(function(c){
+    c.addEventListener('click', function(){
+      c.classList.toggle('on');
+      activeTags = chips.filter(function(x){ return x.classList.contains('on'); })
+                        .map(function(x){ return x.dataset.tag; });
+      apply();
+    });
+  });
+
+  /* ---------- scroll: progress, spy, top button ---------- */
+  var progress = document.getElementById('progress'),
+      topBtn = document.getElementById('topBtn'),
+      curNum = document.getElementById('curNum'),
+      curLbl = document.getElementById('curLbl');
+
+  function onScroll(){
+    var doc = document.documentElement;
+    var max = doc.scrollHeight - window.innerHeight;
+    progress.style.width = (max > 0 ? (window.scrollY / max) * 100 : 0) + '%';
+    topBtn.classList.toggle('show', window.scrollY > 900);
+
+    var current = null;
+    for (var i = 0; i < eras.length; i++) {
+      if (eras[i].classList.contains('hide')) continue;
+      if (eras[i].getBoundingClientRect().top <= 140) current = eras[i];
+    }
+    if (current) {
+      curNum.textContent = current.dataset.num;
+      curLbl.textContent = current.dataset.name;
+      chapterBtn.classList.toggle('theme', current.classList.contains('theme'));
+      var links = toc.querySelectorAll('a');
+      Array.prototype.forEach.call(links, function(a){
+        a.classList.toggle('cur', a.getAttribute('href') === '#' + current.id);
+      });
+    }
+  }
+  var ticking = false;
+  window.addEventListener('scroll', function(){
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(function(){ onScroll(); ticking = false; });
+    }
+  }, {passive:true});
+  onScroll();
+
+  topBtn.addEventListener('click', function(){ window.scrollTo({top:0, behavior: reduced ? 'auto' : 'smooth'}); });
+})();
+</script>
+</body>
+</html>
