@@ -303,7 +303,9 @@ mark{background:#ffe9a8;color:inherit;border-radius:2px;padding:0 1px}
 
 /* ---------- footer ---------- */
 footer{
-  background:var(--night);color:#a8adcf;padding:36px var(--gutter);
+  /* 38px bottom, not 36: the star glyph carries ~8px of leading above it
+     vs ~6px below the last text line, so equal padding reads top-heavy */
+  background:var(--night);color:#a8adcf;padding:36px var(--gutter) 38px;
   font-family:var(--sans);font-size:13px;line-height:1.7;
 }
 footer .fstar{color:var(--gold);font-size:16px;margin-bottom:12px}
